@@ -66,7 +66,8 @@
 
     /* ── MAP ── */
     #map-wrap { position:relative; flex:1 1 auto; min-height:0; }
-    #map { width:100%; height:100%; }
+    #map { width:100%; height:100%; background:#0d0d0d; }
+    .leaflet-container { background:#0d0d0d !important; }
 
     /* Leaflet dark styling */
     .leaflet-control-attribution { font-family:'Inter',sans-serif !important; font-size:.6rem !important; background:rgba(13,13,13,.85) !important; color:var(--muted) !important; }
@@ -397,19 +398,27 @@ function goTo(idx, animate = true) {
   // Dots
   renderDots();
 
-  // Card active state + scroll into view
+  // Card active state + scroll into view (flag prevents scroll-sync from fighting us)
   document.querySelectorAll('.card').forEach((c, i) => c.classList.toggle('active', i === active));
   const activeCard = document.getElementById(`card-${active}`);
-  if (activeCard) activeCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  if (activeCard) {
+    isProgrammaticScroll = true;
+    activeCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    setTimeout(() => { isProgrammaticScroll = false; }, 600);
+  }
 }
 
 function navigate(dir) { goTo(active + dir, true); }
 
 // ── SCROLL SYNC ──────────────────────────────────────────
+// Only sync when the user manually drags the scroll — not when goTo() programmatically scrolls
+let isProgrammaticScroll = false;
+
 document.addEventListener('DOMContentLoaded', () => {
   const scroll = document.getElementById('cardsScroll');
   let t;
   scroll.addEventListener('scroll', () => {
+    if (isProgrammaticScroll) return;
     clearTimeout(t);
     t = setTimeout(() => {
       let closest = 0, closestDist = Infinity;
@@ -421,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dist < closestDist) { closestDist = dist; closest = i; }
       });
       if (closest !== active) goTo(closest, true);
-    }, 120);
+    }, 150);
   });
 });
 </script>
