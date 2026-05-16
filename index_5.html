@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backpacking Western Europe 2025 · sk-geovisual</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="landing-inner">
+    <a class="logo-link" href="https://sk-geovisual.github.io" target="_blank" rel="noopener">
+      <img src="img/sk-geovisual.svg" alt="sk-geovisual logo"/>
+    </a>
+    <div class="label">April 2025</div>
+    <h1 class="hero-title">BACKPACKING<span>WESTERN EUROPE</span></h1>
+    <div class="intro-text">
+      <p>In April 2025, right after finishing my bachelor’s degree, I packed my backpack and set off to travel through Western Europe.</p>
+      <p>I wanted to get out of my comfort zone, meet new people, experience different cultures, and improve my Spanish by fully immersing myself in the language along the way. There was only one rule: no planes — only trains and buses.</p>
+      <p>After countless unforgettable moments, random encounters, missed connections, late-night conversations, and beautiful places, I want to share a little piece of this adventure with you.</p>
+      <p>So hop on board and come travel with me.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val">6,000</div><div class="stat-lbl">Kilometers</div></div>
+      <div class="stat"><div class="stat-val">75</div><div class="stat-lbl">Nights</div></div>
+      <div class="stat"><div class="stat-val">23</div><div class="stat-lbl">Cities</div></div>
+      <div class="stat"><div class="stat-val">1</div><div class="stat-lbl">Rule</div></div>
+    </div>
+    <button class="cta" onclick="startJourney()">→ Start the Journey</button>
+  </div>
+</div>
+
+<!-- STORYMAP -->
+<div id="storymap" class="screen">
+  <div class="header">
+    <button class="home-btn" onclick="goHome()">← Home</button>
+    <div class="divider-v"></div>
+    <a class="header-logo" href="https://sk-geovisual.github.io" target="_blank" rel="noopener">
+      <img src="img/sk-geovisual.svg" alt="sk-geovisual"/>
+      <div>
+        <div class="header-sub">sk-geovisual · 2025</div>
+        <div class="header-title">BACKPACKING WESTERN EUROPE</div>
+      </div>
+    </a>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div class="map-badge" id="mapBadge"></div>
+    <div class="map-progress"><div class="map-progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-meta">
+        <span class="panel-station" id="panelStation"></span>
+        <span class="panel-count" id="panelCount"></span>
+      </div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="btnStart"  onclick="goTo(0,true)">|← Start</button>
+        <button class="nav-btn" id="btnPrev"   onclick="navigate(-1)">← Prev</button>
+        <button class="nav-btn" id="btnNext"   onclick="navigate(1)">Next →</button>
+        <button class="nav-btn" id="btnEnd"    onclick="goTo(STOPS.length-1,true)">End →|</button>
+      </div>
+    </div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
