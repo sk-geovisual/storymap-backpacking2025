@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backpacking Western Europe 2025 · sk-geovisual</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent:        #007878;
+      --accent-bright: #00a0a0;
+      --bg-dark:       #0d0d0d;
+      --bg-card:       #161616;
+      --bg-mid:        #1e1e1e;
+      --text:          #f0f0f0;
+      --muted:         #888;
+      --border:        #2a2a2a;
+    }
+    html, body { height: 100%; font-family: 'Space Mono', monospace; background: var(--bg-dark); color: var(--text); overflow: hidden; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; width: 100%; height: 100%; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ── LANDING ── */
+    #landing {
+      overflow-y: auto;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, #001a1a 0%, var(--bg-dark) 70%);
+      align-items: center;
+    }
+    .landing-inner { width: 100%; max-width: 620px; margin: auto; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .corner { position: fixed; width: 20px; height: 20px; pointer-events: none; }
+    .corner.tl { top:1.5rem;left:1.5rem; border-top:1px solid rgba(0,120,120,.4); border-left:1px solid rgba(0,120,120,.4); }
+    .corner.tr { top:1.5rem;right:1.5rem; border-top:1px solid rgba(0,120,120,.4); border-right:1px solid rgba(0,120,120,.4); }
+    .corner.bl { bottom:1.5rem;left:1.5rem; border-bottom:1px solid rgba(0,120,120,.4); border-left:1px solid rgba(0,120,120,.4); }
+    .corner.br { bottom:1.5rem;right:1.5rem; border-bottom:1px solid rgba(0,120,120,.4); border-right:1px solid rgba(0,120,120,.4); }
+    .logo-link img { height:40px; width:auto; filter:brightness(0) saturate(100%) invert(35%) sepia(90%) saturate(400%) hue-rotate(150deg); opacity:.8; transition:opacity .2s; }
+    .logo-link:hover img { opacity:1; }
+    .label { font-size:.6rem; letter-spacing:.4em; text-transform:uppercase; color:var(--accent-bright); margin:1.4rem 0 .8rem; opacity:.8; }
+    .hero-title { font-size:clamp(2rem,7vw,4.2rem); font-weight:700; line-height:1.05; }
+    .hero-title span { color:var(--accent-bright); text-shadow:0 0 40px rgba(0,160,160,.5); display:block; }
+    .intro-text { font-family:'Inter',sans-serif; font-size:.92rem; line-height:1.85; color:#a0a0a0; font-weight:300; margin:2rem 0; text-align:left; }
+    .intro-text p+p { margin-top:.9rem; }
+    .stats { display:flex; flex-wrap:wrap; gap:1px; width:100%; background:var(--border); margin-bottom:2.5rem; }
+    .stat { flex:1 1 120px; background:var(--bg-card); padding:1rem; text-align:center; }
+    .stat-val { font-size:1.4rem; font-weight:700; color:var(--accent-bright); text-shadow:0 0 20px rgba(0,120,120,.4); }
+    .stat-lbl { font-family:'Inter',sans-serif; font-size:.6rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-top:.25rem; }
+    .cta { font-family:'Space Mono',monospace; font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; background:transparent; color:var(--accent-bright); border:1px solid var(--accent); padding:.9rem 2.5rem; cursor:pointer; transition:all .3s; }
+    .cta:hover { background:var(--accent-bright); color:var(--bg-dark); box-shadow:0 0 30px rgba(0,120,120,.4); }
+
+    /* ── STORYMAP ── */
+    #storymap { overflow:hidden; }
+    .header { background:var(--bg-dark); border-bottom:1px solid var(--border); padding:.45rem 1rem; display:flex; align-items:center; gap:.8rem; flex-shrink:0; }
+    .home-btn { font-family:'Space Mono',monospace; font-size:.6rem; letter-spacing:.1em; background:transparent; color:var(--muted); border:1px solid var(--border); padding:.28rem .6rem; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .home-btn:hover { color:var(--accent-bright); border-color:var(--accent); background:var(--bg-mid); }
+    .divider-v { width:1px; height:20px; background:var(--border); flex-shrink:0; }
+    .header-logo { text-decoration:none; display:flex; align-items:center; gap:.6rem; flex:1; min-width:0; }
+    .header-logo img { height:20px; width:auto; filter:brightness(0) saturate(100%) invert(35%) sepia(90%) saturate(400%) hue-rotate(150deg); }
+    .header-sub { font-size:.48rem; color:var(--accent-bright); letter-spacing:.2em; text-transform:uppercase; }
+    .header-title { font-size:.75rem; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .dots { display:flex; gap:3px; align-items:center; flex-shrink:0; }
+    .dot { height:5px; border-radius:3px; border:none; cursor:pointer; padding:0; transition:all .3s; }
+
+    /* ── MAP ── */
+    #map-wrap { position:relative; flex:1 1 auto; min-height:0; }
+    #map { width:100%; height:100%; background:#0d0d0d; }
+    .leaflet-container { background:#0d0d0d !important; }
+
+    /* Leaflet dark styling */
+    .leaflet-control-attribution { font-family:'Inter',sans-serif !important; font-size:.6rem !important; background:rgba(13,13,13,.85) !important; color:var(--muted) !important; }
+    .leaflet-control-attribution a { color:var(--accent-bright) !important; }
+    .leaflet-popup-content-wrapper { background:var(--bg-dark) !important; color:var(--text) !important; border:1px solid var(--accent) !important; border-radius:0 !important; box-shadow:0 8px 32px rgba(0,0,0,.6) !important; font-family:'Space Mono',monospace !important; }
+    .leaflet-popup-tip { background:var(--bg-dark) !important; }
+    .leaflet-popup-content { margin:.75rem 1rem !important; font-size:.72rem !important; line-height:1.6 !important; }
+    .leaflet-popup-content strong { color:var(--accent-bright); display:block; margin-bottom:.15rem; font-size:.82rem; }
+    .leaflet-popup-content .pop-sub { color:var(--muted); font-size:.58rem; }
+    .leaflet-popup-content .pop-go { display:inline-block; margin-top:.4rem; font-size:.58rem; color:var(--accent-bright); letter-spacing:.1em; cursor:pointer; border-bottom:1px solid var(--accent); }
+    .leaflet-popup-close-button { color:var(--accent-bright) !important; }
+
+    .map-badge { position:absolute; top:.8rem; left:.8rem; z-index:1000; background:rgba(13,13,13,.92); border:1px solid var(--accent); color:var(--text); padding:.35rem .8rem; font-size:.68rem; pointer-events:none; }
+    .map-badge .stn { color:var(--accent-bright); }
+
+    /* ── PANEL ── */
+    .panel { flex-shrink:0; height:46%; background:var(--bg-dark); border-top:1px solid rgba(0,120,120,.2); display:flex; flex-direction:column; overflow:hidden; }
+    .panel-header { padding:.38rem 1rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); flex-shrink:0; gap:.5rem; }
+    .panel-meta { display:flex; align-items:center; gap:.6rem; }
+    .panel-station { font-size:.52rem; color:var(--accent-bright); letter-spacing:.15em; }
+    .panel-count { font-size:.48rem; color:#444; }
+    .nav-btns { display:flex; gap:.4rem; }
+    .nav-btn { font-family:'Space Mono',monospace; font-size:.65rem; letter-spacing:.08em; background:var(--bg-card); color:var(--accent-bright); border:1px solid var(--accent); padding:.3rem .75rem; cursor:pointer; transition:all .2s; }
+    .nav-btn:hover:not(:disabled) { background:var(--accent); color:var(--bg-dark); }
+    .nav-btn:disabled { background:transparent; color:#333; border-color:#222; cursor:default; }
+
+    /* ── CARDS ── */
+    .cards-scroll { flex:1 1 auto; display:flex; overflow-x:auto; overflow-y:hidden; gap:.8rem; padding:.6rem 1rem; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; align-items:stretch; }
+    .cards-scroll::-webkit-scrollbar { height:3px; }
+    .cards-scroll::-webkit-scrollbar-track { background:#111; }
+    .cards-scroll::-webkit-scrollbar-thumb { background:rgba(0,120,120,.4); border-radius:2px; }
+    .card { min-width:min(360px,82vw); max-width:min(360px,82vw); background:var(--bg-mid); border:1px solid var(--border); border-top:2px solid transparent; padding:.7rem .85rem; opacity:.28; display:flex; flex-direction:column; scroll-snap-align:center; flex-shrink:0; transition:opacity .4s,transform .4s,border-color .4s,box-shadow .4s; }
+    .card.active { background:var(--bg-card); border-color:rgba(0,120,120,.4); border-top-color:var(--accent-bright); opacity:1; transform:translateY(-2px); box-shadow:0 0 24px rgba(0,120,120,.08); }
+    .card-header { display:flex; align-items:baseline; gap:.5rem; margin-bottom:.28rem; flex-shrink:0; flex-wrap:wrap; }
+    .card-stn { font-size:.52rem; color:var(--accent-bright); }
+    .card-city { font-size:.82rem; font-weight:700; }
+    .card-dur { font-size:.48rem; color:rgba(0,160,160,.6); letter-spacing:.1em; text-transform:uppercase; }
+    .card-country { font-size:.55rem; color:var(--muted); margin-left:auto; }
+    .card-divider { height:1px; background:linear-gradient(to right,rgba(0,120,120,.5),transparent); margin-bottom:.45rem; flex-shrink:0; }
+    .tab-bar { display:flex; gap:1px; margin-bottom:.5rem; flex-shrink:0; background:var(--border); }
+    .tab-btn { flex:1; font-family:'Space Mono',monospace; font-size:.52rem; letter-spacing:.1em; text-transform:uppercase; padding:.28rem; border:none; cursor:pointer; background:#111; color:var(--muted); transition:all .2s; }
+    .tab-btn.on { background:var(--accent); color:var(--bg-dark); }
+    .card-body { flex:1 1 auto; overflow:hidden; display:flex; flex-direction:column; min-height:0; }
+    .card-text { font-family:'Inter',sans-serif; font-size:.75rem; line-height:1.72; color:#b8b8b8; font-weight:300; margin:0; white-space:pre-wrap; overflow-y:auto; flex:1 1 auto; }
+    .card-photo { flex:1 1 auto; background:#0e0e0e; border:1px dashed rgba(0,160,160,.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem; overflow:hidden; }
+    .card-photo img { width:100%; height:100%; object-fit:cover; }
+    .photo-label { font-size:.5rem; color:var(--accent-bright); opacity:.3; letter-spacing:.15em; }
+    .card-footer { margin-top:.35rem; flex-shrink:0; font-size:.45rem; color:#2a2a2a; letter-spacing:.1em; display:flex; justify-content:space-between; }
+    .card-footer-right { color:rgba(0,120,120,.5); }
+  </style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="landing-inner">
+    <a class="logo-link" href="https://sk-geovisual.github.io" target="_blank" rel="noopener">
+      <img src="img/sk-geovisual.svg" alt="sk-geovisual logo"/>
+    </a>
+    <div class="label">April 2025</div>
+    <h1 class="hero-title">BACKPACKING<span>WESTERN EUROPE</span></h1>
+    <div class="intro-text">
+      <p>From April 2025 I went backpacking through western Europe and learned a new language: Spanish.</p>
+      <p>After successfully finishing my bachelor's in March I took the chance to gain life experience by travelling and meeting other cultures and people. My only rule was to just travel by train and bus.</p>
+      <p>An uncountable amount of glorious experiences later I want to give you an insight into it. So let's go and accompany me on my journey.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val">75</div><div class="stat-lbl">Nights</div></div>
+      <div class="stat"><div class="stat-val">23</div><div class="stat-lbl">Cities</div></div>
+      <div class="stat"><div class="stat-val">ca. 6,000 km</div><div class="stat-lbl">By public transport</div></div>
+      <div class="stat"><div class="stat-val">1</div><div class="stat-lbl">Rule</div></div>
+    </div>
+    <button class="cta" onclick="startJourney()">→ Start the Journey</button>
+  </div>
+</div>
+
+<!-- STORYMAP -->
+<div id="storymap" class="screen">
+  <div class="header">
+    <button class="home-btn" onclick="goHome()">← Home</button>
+    <div class="divider-v"></div>
+    <a class="header-logo" href="https://sk-geovisual.github.io" target="_blank" rel="noopener">
+      <img src="img/sk-geovisual.svg" alt="sk-geovisual"/>
+      <div>
+        <div class="header-sub">sk-geovisual · 2025</div>
+        <div class="header-title">BACKPACKING WESTERN EUROPE</div>
+      </div>
+    </a>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div class="map-badge" id="mapBadge"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-meta">
+        <span class="panel-station" id="panelStation"></span>
+        <span class="panel-count" id="panelCount"></span>
+      </div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="btnPrev" onclick="navigate(-1)">← Prev</button>
+        <button class="nav-btn" id="btnNext" onclick="navigate(1)">Next →</button>
+      </div>
+    </div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+  </div>
+</div>
+
+<script>
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+
+// station numbering: 00–26, consistent throughout
+const STOPS = [
+  { city:"Würzburg",               country:"Germany",       stn:"00", ll:[49.795,9.929],      zoom:13, dur:"Departure",   photo:null, text:"On April 23rd, I left my hometown, Würzburg, and jumped on a train heading straight to Paris." },
+  { city:"Paris",                   country:"France",        stn:"01", ll:[48.8566,2.3522],    zoom:13, dur:"Three nights", photo:null, text:"Arriving in Paris at night was an amazing choice. The street lights and the restaurants full of people created a lovely atmosphere.\n\nIn Paris, I was able to see famous sights such as the Basilique du Sacré-Cœur de Montmartre, Notre-Dame de Paris, Tour Eiffel, and the Louvre. But what fascinated me the most was the ambience of the city itself. Don't get me wrong, but simply sitting in a café in Paris already made me feel like a Frenchman. The soft sound of an accordion, the beautiful language, and the smell of delicious baked goods created a unique atmosphere. The only thing that stressed me a little was the hurried pace of the people and the large number of tourists.\n\nThat changed when I met some locals — a group of three friends who invited me to spend the evening with them in their friend's garden, eating pizza and philosophising about the meaning of life. Later on, I met the landlord and landlady, an elderly couple who had lived in Germany during their childhood, where they also got to know each other, before later moving back to France. It was lovely to hear my French neighbours speak so warmly about the time they had spent in my home country." },
+  { city:"Caen",                    country:"France",        stn:"02", ll:[49.1829,-0.3707],   zoom:13, dur:"Two nights",  photo:null, text:"My new friends from Paris asked me, \"Why are you travelling to Caen? There's absolutely nothing there.\"\n\nWell, I gladly disagree with that. Yes, Caen is a small and quiet city, but I think that's exactly why I enjoyed my stay there so much. After spending three nights in the overstimulating metropolis of Paris, it felt like a retreat to experience the calmness of Caen. The marvellous old town, with the Château de Caen and the Église Saint-Pierre, made me not regret my trip to Caen at all." },
+  { city:"Le Mont-Saint-Michel",    country:"France",        stn:"03", ll:[48.6361,-1.5115],   zoom:14, dur:"Day trip",    photo:null, text:"From Caen I took the bus to finally get to see one of my long-awaited destinations: Le Mont-Saint-Michel. After walking a bunch of kilometers along the coast I slowly saw the castle building up at the horizon. Reaching the island, I first took some photos and then entered the small town. Walking through this delicate town staying on a 92 meter tall rocky island was just indescribable. Feeling the tiny breeze of the ocean's wind blowing into my face mixed with the first rays of the summer sun made me feel just in peace." },
+  { city:"Rennes",                  country:"France",        stn:"04", ll:[48.1173,-1.6778],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Nantes",                  country:"France",        stn:"05", ll:[47.2184,-1.5536],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Bordeaux",                country:"France",        stn:"06", ll:[44.8378,-0.5792],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Biarritz",                country:"France",        stn:"07", ll:[43.4832,-1.5586],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Donostia-San Sebastián",  country:"Spain",         stn:"08", ll:[43.3183,-1.9812],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Bilbao",                  country:"Spain",         stn:"09", ll:[43.263,-2.935],      zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Santander",               country:"Spain",         stn:"10", ll:[43.4623,-3.8099],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Oviedo",                  country:"Spain",         stn:"11", ll:[43.3614,-5.8593],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Gijón",                   country:"Spain",         stn:"12", ll:[43.5453,-5.6615],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"A Coruña",                country:"Spain",         stn:"13", ll:[43.3623,-8.4115],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Santiago de Compostela",  country:"Spain",         stn:"14", ll:[42.8782,-8.5448],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Ourense",                 country:"Spain",         stn:"15", ll:[42.3364,-7.8641],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Vigo",                    country:"Spain",         stn:"16", ll:[42.2406,-8.7207],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Tui",                     country:"Spain",         stn:"17", ll:[42.0457,-8.6446],   zoom:14, dur:null, photo:null, text:LOREM },
+  { city:"Valença",                 country:"Portugal",      stn:"18", ll:[42.0284,-8.6327],   zoom:14, dur:null, photo:null, text:LOREM },
+  { city:"Braga",                   country:"Portugal",      stn:"19", ll:[41.5454,-8.4265],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Porto",                   country:"Portugal",      stn:"20", ll:[41.1579,-8.6291],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Salamanca",               country:"Spain",         stn:"21", ll:[40.9701,-5.6635],   zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"Madrid",                  country:"Spain",         stn:"22", ll:[40.4168,-3.7038],   zoom:12, dur:null, photo:null, text:LOREM },
+  { city:"Barcelona",               country:"Spain",         stn:"23", ll:[41.3851,2.1734],    zoom:13, dur:null, photo:null, text:LOREM },
+  { city:"The Wildfire",            country:"Spain / France",stn:"24", ll:[43.3,3.0],           zoom:10, dur:"Day trip",    photo:null, text:"After crossing the border into France, we were supposed to take the highway from Perpignan to Montpellier. Upon arriving there, we were told that the highway was closed due to a wildfire. Therefore, we had to take an alternative route, which turned out to be a 12-hour detour through the middle of nowhere." },
+  { city:"Lyon",                    country:"France",        stn:"25", ll:[45.748,4.847],       zoom:13, dur:"Day trip",    photo:null, text:"After 24 hours on the FlixBus, we finally reached Lyon. The drivers told us that the bus had to stop there and that we should go to the service centre to get another ticket for the ride to our final destination. As a result, I received another bus transfer from Lyon to Würzburg, for which I had to wait another six hours in Lyon. To make the best of the situation, I took a walk around the city and drank a fresh lemonade in a café." },
+  { city:"Würzburg",                country:"Germany",       stn:"26", ll:[49.795,9.929],       zoom:13, dur:"Return",      photo:null, text:"The journey ends where it began. Back in Würzburg after 75 nights on the road — with a new language, new perspectives, and a map full of memories across 23 cities and over 6,000 kilometers of public transport." },
+];
+
+let active = 0;
+let map = null;
+let markers = [];
+let cardTabs = {};
+
+// ── SCREENS ──────────────────────────────────────────────
+function startJourney() {
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('storymap').classList.add('active');
+  if (!map) initMap();
+  renderDots();
+  renderCards();
+  goTo(0, false);
+}
+
+function goHome() {
+  document.getElementById('storymap').classList.remove('active');
+  document.getElementById('landing').classList.add('active');
+}
+
+// ── MAP ──────────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', {
+    center: [46, 2], zoom: 5,
+    zoomControl: false,
+    scrollWheelZoom: true,
+  });
+
+  // CARTO Dark tiles — no API key needed
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd', maxZoom: 19,
+  }).addTo(map);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // Faint full route polyline
+  L.polyline(STOPS.map(s => s.ll), {
+    color: '#007878', weight: 1.5, opacity: 0.2, dashArray: '4,6',
+  }).addTo(map);
+
+  // Markers — clickable to jump to that station
+  STOPS.forEach((stop, i) => {
+    const m = L.marker(stop.ll, { icon: makeIcon(false, false) })
+      .addTo(map)
+      .bindPopup(makePopupHTML(stop, i), { maxWidth: 220 });
+
+    // Clicking marker navigates to that station
+    m.on('click', () => goTo(i, true));
+
+    markers.push(m);
+  });
+}
+
+function makePopupHTML(stop, i) {
+  return `<strong>${stop.city}</strong>
+<span class="pop-sub">${stop.country}${stop.dur ? ' · ' + stop.dur : ''}</span>
+<br/><span class="pop-go" onclick="goTo(${i},true)">→ Go to station ${stop.stn}</span>`;
+}
+
+function makeIcon(isActive, isVisited) {
+  const size   = isActive ? 16 : isVisited ? 9 : 7;
+  const color  = isActive ? '#00a0a0' : isVisited ? '#007878' : '#2a2a2a';
+  const border = isActive ? '2.5px solid #0d0d0d' : isVisited ? '1.5px solid #005555' : '1px solid #444';
+  const shadow = isActive ? '0 0 0 4px rgba(0,120,120,.25),0 0 12px rgba(0,160,160,.4)' : 'none';
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:${border};box-shadow:${shadow};transition:all .4s;"></div>`,
+    iconSize: [size, size], iconAnchor: [size/2, size/2],
+  });
+}
+
+function updateMap(idx, animate) {
+  const stop = STOPS[idx];
+
+  if (animate) {
+    map.flyTo(stop.ll, stop.zoom, { duration: 1.2, easeLinearity: 0.3 });
+  } else {
+    map.setView(stop.ll, stop.zoom);
+  }
+
+  // Update all marker icons
+  markers.forEach((m, i) => m.setIcon(makeIcon(i === idx, i < idx)));
+
+  // Open popup after fly animation
+  setTimeout(() => markers[idx] && markers[idx].openPopup(), animate ? 1100 : 100);
+
+  // Redraw visited route segment
+  if (map._visitedRoute) map.removeLayer(map._visitedRoute);
+  if (idx > 0) {
+    map._visitedRoute = L.polyline(STOPS.slice(0, idx + 1).map(s => s.ll), {
+      color: '#00a0a0', weight: 2.5, opacity: 0.7, dashArray: '5,4',
+    }).addTo(map);
+  }
+}
+
+// ── DOTS ─────────────────────────────────────────────────
+function renderDots() {
+  const el = document.getElementById('dots');
+  el.innerHTML = '';
+  STOPS.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.className = 'dot';
+    b.style.cssText = `width:${i===active?'14px':'5px'};background:${i===active?'#00a0a0':i<active?'rgba(0,120,120,.5)':'#2a2a2a'};box-shadow:${i===active?'0 0 6px #007878':'none'};`;
+    b.onclick = () => goTo(i, true);
+    el.appendChild(b);
+  });
+}
+
+// ── CARDS ────────────────────────────────────────────────
+const CAMERA_SVG = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00a0a0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+
+function photoHTML(stop) {
+  return stop.photo
+    ? `<img src="${stop.photo}" alt="${stop.city}"/>`
+    : `${CAMERA_SVG}<span class="photo-label">PHOTO · ${stop.city.toUpperCase()}</span>`;
+}
+
+function renderCards() {
+  const scroll = document.getElementById('cardsScroll');
+  scroll.innerHTML = '';
+  STOPS.forEach((stop, i) => {
+    const tab = cardTabs[stop.stn] || 'text';
+    const card = document.createElement('div');
+    card.className = 'card' + (i === active ? ' active' : '');
+    card.id = `card-${i}`;
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="card-stn">${stop.stn}</span>
+        <span class="card-city">${stop.city}</span>
+        ${stop.dur ? `<span class="card-dur">${stop.dur}</span>` : ''}
+        <span class="card-country">${stop.country}</span>
+      </div>
+      <div class="card-divider"></div>
+      <div class="tab-bar">
+        <button class="tab-btn ${tab==='text'?'on':''}" onclick="switchTab(${i},'text')">✦ Story</button>
+        <button class="tab-btn ${tab==='photo'?'on':''}" onclick="switchTab(${i},'photo')">◎ Photo</button>
+      </div>
+      <div class="card-body" id="card-body-${i}">
+        ${tab==='text'
+          ? `<p class="card-text">${stop.text}</p>`
+          : `<div class="card-photo">${photoHTML(stop)}</div>`}
+      </div>
+      <div class="card-footer">
+        <span>BACKPACKING_EU_2025</span>
+        <span class="card-footer-right">${stop.stn} / 26</span>
+      </div>`;
+    scroll.appendChild(card);
+  });
+}
+
+function switchTab(i, tab) {
+  cardTabs[STOPS[i].stn] = tab;
+  document.getElementById(`card-body-${i}`).innerHTML =
+    tab === 'text'
+      ? `<p class="card-text">${STOPS[i].text}</p>`
+      : `<div class="card-photo">${photoHTML(STOPS[i])}</div>`;
+  document.querySelectorAll(`#card-${i} .tab-btn`).forEach((b, j) =>
+    b.classList.toggle('on', j === (tab==='text'?0:1)));
+}
+
+// ── NAVIGATION ───────────────────────────────────────────
+function goTo(idx, animate = true) {
+  active = Math.max(0, Math.min(STOPS.length - 1, idx));
+  const stop = STOPS[active];
+
+  updateMap(active, animate);
+
+  // Badge
+  document.getElementById('mapBadge').innerHTML =
+    `<span class="stn">${stop.stn}</span> · <strong>${stop.city}</strong> · <span style="opacity:.5;font-size:.58rem">${stop.country}</span>`;
+
+  // Panel header
+  document.getElementById('panelStation').textContent = `STATION ${stop.stn}`;
+  document.getElementById('panelCount').textContent   = `${stop.stn} / 26`;
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled = active === 0;
+  document.getElementById('btnNext').disabled = active === STOPS.length - 1;
+
+  // Dots
+  renderDots();
+
+  // Card active state + scroll into view (flag prevents scroll-sync from fighting us)
+  document.querySelectorAll('.card').forEach((c, i) => c.classList.toggle('active', i === active));
+  const activeCard = document.getElementById(`card-${active}`);
+  if (activeCard) {
+    isProgrammaticScroll = true;
+    activeCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    setTimeout(() => { isProgrammaticScroll = false; }, 600);
+  }
+}
+
+function navigate(dir) { goTo(active + dir, true); }
+
+// ── SCROLL SYNC ──────────────────────────────────────────
+// Only sync when the user manually drags the scroll — not when goTo() programmatically scrolls
+let isProgrammaticScroll = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const scroll = document.getElementById('cardsScroll');
+  let t;
+  scroll.addEventListener('scroll', () => {
+    if (isProgrammaticScroll) return;
+    clearTimeout(t);
+    t = setTimeout(() => {
+      let closest = 0, closestDist = Infinity;
+      const cRect = scroll.getBoundingClientRect();
+      const center = cRect.width / 2;
+      document.querySelectorAll('.card').forEach((card, i) => {
+        const r = card.getBoundingClientRect();
+        const dist = Math.abs((r.left - cRect.left + r.width / 2) - center);
+        if (dist < closestDist) { closestDist = dist; closest = i; }
+      });
+      if (closest !== active) goTo(closest, true);
+    }, 150);
+  });
+});
+</script>
+</body>
+</html>
