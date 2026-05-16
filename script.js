@@ -194,8 +194,8 @@ function renderCards() {
       </div>
       <div class="card-divider"></div>
       <div class="tab-bar">
-        <button class="tab-btn ${tab === 'text'  ? 'on' : ''}" onclick="switchTab(${i},'text')">✦ Story</button>
-        <button class="tab-btn ${tab === 'photo' ? 'on' : ''}" onclick="switchTab(${i},'photo')">◎ Photo</button>
+        <button class="tab-btn ${tab === 'text'  ? 'on' : ''}" onclick="selectAndTab(${i},'text')">✦ Story</button>
+        <button class="tab-btn ${tab === 'photo' ? 'on' : ''}" onclick="selectAndTab(${i},'photo')">◎ Photo</button>
       </div>
       <div class="card-body" id="card-body-${i}">
         ${tab === 'text'
@@ -206,6 +206,12 @@ function renderCards() {
         <span>BACKPACKING_EU_2025</span>
         <span class="card-footer-right">${stop.stn} / 26</span>
       </div>`;
+    // Clicking anywhere on the card selects it
+    card.addEventListener('click', (e) => {
+      // Don't double-fire if a tab button was clicked (selectAndTab handles it)
+      if (e.target.closest('.tab-btn')) return;
+      if (i !== active) goTo(i, true);
+    });
     scroll.appendChild(card);
   });
 }
@@ -218,6 +224,17 @@ function switchTab(i, tab) {
       : `<div class="card-photo">${photoHTML(STOPS[i])}</div>`;
   document.querySelectorAll(`#card-${i} .tab-btn`).forEach((b, j) =>
     b.classList.toggle('on', j === (tab === 'text' ? 0 : 1)));
+}
+
+// Select station first (if not already active), then switch tab
+function selectAndTab(i, tab) {
+  if (i !== active) {
+    goTo(i, true);
+    // Small delay so goTo finishes rendering before tab switch
+    setTimeout(() => switchTab(i, tab), 50);
+  } else {
+    switchTab(i, tab);
+  }
 }
 
 /* ── NAVIGATION ───────────────────────────────────────── */
@@ -260,6 +277,7 @@ function goTo(idx, animate = true) {
 }
 
 function navigate(dir) { goTo(active + dir, true); }
+function goEnd()        { goTo(STOPS.length - 1, true); }
 
 /* ── SCROLL SYNC ──────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
