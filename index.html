@@ -6,7 +6,7 @@
   <title>Backpacking Western Europe 2025 · sk-geovisual</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 
@@ -21,7 +21,7 @@
     <div class="label">April 2025</div>
     <h1 class="hero-title">BACKPACKING<span>WESTERN EUROPE</span></h1>
     <div class="intro-text">
-      <p>In April 2025, right after finishing my bachelor’s degree, I packed my backpack and set off to travel through Western Europe.</p>
+      <p>In April 2025, right after finishing my bachelor's degree, I packed my backpack and set off to travel through Western Europe.</p>
       <p>I wanted to get out of my comfort zone, meet new people, experience different cultures, and improve my Spanish by fully immersing myself in the language along the way. There was only one rule: no planes — only trains and buses.</p>
       <p>After countless unforgettable moments, random encounters, missed connections, late-night conversations, and beautiful places, I want to share a little piece of this adventure with you.</p>
       <p>So hop on board and come travel with me.</p>
@@ -67,7 +67,7 @@
         <button class="nav-btn" id="btnStart"  onclick="goTo(0,true)">|← Start</button>
         <button class="nav-btn" id="btnPrev"   onclick="navigate(-1)">← Prev</button>
         <button class="nav-btn" id="btnNext"   onclick="navigate(1)">Next →</button>
-        <button class="nav-btn" id="btnEnd"    onclick="goTo(STOPS.length-1,true)">End →|</button>
+        <button class="nav-btn" id="btnEnd"    onclick="goEnd()">End →|</button>
       </div>
     </div>
     <div class="cards-scroll" id="cardsScroll"></div>
@@ -75,6 +75,6 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
