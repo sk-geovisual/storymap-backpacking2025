@@ -50,10 +50,13 @@ html, body {
 
 .logo-link img {
   height: 40px; width: auto;
-  filter: brightness(0) saturate(100%) invert(35%) sepia(90%) saturate(400%) hue-rotate(150deg);
-  opacity: .8; transition: opacity .2s;
+  opacity: .85; transition: opacity .2s;
 }
 .logo-link:hover img { opacity: 1; }
+
+.header-logo img {
+  height: 20px; width: auto;
+}
 
 .label {
   font-size: .6rem; letter-spacing: .4em; text-transform: uppercase;
@@ -115,10 +118,6 @@ html, body {
 .divider-v { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
 
 .header-logo { text-decoration: none; display: flex; align-items: center; gap: .6rem; flex: 1; min-width: 0; }
-.header-logo img {
-  height: 20px; width: auto;
-  filter: brightness(0) saturate(100%) invert(35%) sepia(90%) saturate(400%) hue-rotate(150deg);
-}
 .header-sub   { font-size: .48rem; color: var(--accent-bright); letter-spacing: .2em; text-transform: uppercase; }
 .header-title { font-size: .75rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
