@@ -272,7 +272,8 @@ function goTo(idx, animate = true) {
   if (activeCard) {
     isProgrammaticScroll = true;
     activeCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    setTimeout(() => { isProgrammaticScroll = false; }, 700);
+    // Keep flag set longer than flyTo duration (1200ms) + scroll settle time
+    setTimeout(() => { isProgrammaticScroll = false; }, 1600);
   }
 }
 
@@ -287,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isProgrammaticScroll) return;
     clearTimeout(t);
     t = setTimeout(() => {
+      // Only fire if user has actually stopped scrolling
       let closest = 0, closestDist = Infinity;
       const cRect  = scroll.getBoundingClientRect();
       const center = cRect.width / 2;
@@ -295,7 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dist = Math.abs((r.left - cRect.left + r.width / 2) - center);
         if (dist < closestDist) { closestDist = dist; closest = i; }
       });
-      if (closest !== active) goTo(closest, true);
-    }, 150);
+      // Only navigate if meaningfully different and not already correct
+      if (closest !== active) {
+        isProgrammaticScroll = true;
+        goTo(closest, true);
+        setTimeout(() => { isProgrammaticScroll = false; }, 1600);
+      }
+    }, 200);
   });
 });
