@@ -121,8 +121,7 @@ html, body {
 .header-sub   { font-size: .48rem; color: var(--accent-bright); letter-spacing: .2em; text-transform: uppercase; }
 .header-title { font-size: .75rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.dots { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
-.dot  { height: 5px; border-radius: 3px; border: none; cursor: pointer; padding: 0; transition: all .3s; }
+
 
 /* ── MAP ──────────────────────────────────────────────── */
 #map-wrap { position: relative; flex: 1 1 auto; min-height: 0; }
@@ -136,7 +135,17 @@ html, body {
 }
 .leaflet-control-attribution a { color: var(--accent-bright) !important; }
 
-/* Zoom buttons */
+/* Scale bar */
+.leaflet-control-scale-line {
+  background: rgba(13,13,13,.85) !important;
+  border: 1px solid var(--accent) !important;
+  border-top: 2px solid var(--accent-bright) !important;
+  color: var(--muted) !important;
+  font-family: 'Space Mono', monospace !important;
+  font-size: .6rem !important;
+  padding: 2px 6px !important;
+  box-shadow: none !important;
+}
 .leaflet-control-zoom {
   border: 1px solid var(--accent) !important;
   border-radius: 0 !important;
