@@ -2,33 +2,33 @@
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 
 const STOPS = [
-  { city: "Würzburg",              country: "Germany",        stn: "00", ll: [49.795,  9.929],   zoom: 13, dur: "Departure",   photo: null, text: "On April 23rd, I left my hometown, Würzburg, and jumped on a train heading straight to Paris." },
-  { city: "Paris",                  country: "France",         stn: "01", ll: [48.8566, 2.3522],  zoom: 13, dur: "Three nights", photo: null, text: "Arriving in Paris at night was an amazing choice. The street lights and the restaurants full of people created a lovely atmosphere.\n\nIn Paris, I was able to see famous sights such as the Basilique du Sacré-Cœur de Montmartre, Notre-Dame de Paris, Tour Eiffel, and the Louvre. But what fascinated me the most was the ambience of the city itself. Don't get me wrong, but simply sitting in a café in Paris already made me feel like a Frenchman. The soft sound of an accordion, the beautiful language, and the smell of delicious baked goods created a unique atmosphere. The only thing that stressed me a little was the hurried pace of the people and the large number of tourists.\n\nThat changed when I met some locals — a group of three friends who invited me to spend the evening with them in their friend's garden, eating pizza and philosophising about the meaning of life. Later on, I met the landlord and landlady, an elderly couple who had lived in Germany during their childhood, where they also got to know each other, before later moving back to France. It was lovely to hear my French neighbours speak so warmly about the time they had spent in my home country." },
-  { city: "Caen",                   country: "France",         stn: "02", ll: [49.1829,-0.3707],  zoom: 13, dur: "Two nights",  photo: null, text: "My new friends from Paris asked me, \"Why are you travelling to Caen? There's absolutely nothing there.\"\n\nWell, I gladly disagree with that. Yes, Caen is a small and quiet city, but I think that's exactly why I enjoyed my stay there so much. After spending three nights in the overstimulating metropolis of Paris, it felt like a retreat to experience the calmness of Caen. The marvellous old town, with the Château de Caen and the Église Saint-Pierre, made me not regret my trip to Caen at all." },
-  { city: "Le Mont-Saint-Michel",   country: "France",         stn: "03", ll: [48.6361,-1.5115],  zoom: 14, dur: "Day trip",    photo: null, text: "From Caen I took the bus to finally get to see one of my long-awaited destinations: Le Mont-Saint-Michel. After walking a bunch of kilometers along the coast I slowly saw the castle building up at the horizon. Reaching the island, I first took some photos and then entered the small town. Walking through this delicate town staying on a 92 meter tall rocky island was just indescribable. Feeling the tiny breeze of the ocean's wind blowing into my face mixed with the first rays of the summer sun made me feel just in peace." },
-  { city: "Rennes",                 country: "France",         stn: "04", ll: [48.1173,-1.6778],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Nantes",                 country: "France",         stn: "05", ll: [47.2184,-1.5536],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Bordeaux",               country: "France",         stn: "06", ll: [44.8378,-0.5792],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Biarritz",               country: "France",         stn: "07", ll: [43.4832,-1.5586],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Donostia-San Sebastián", country: "Spain",          stn: "08", ll: [43.3183,-1.9812],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Bilbao",                 country: "Spain",          stn: "09", ll: [43.263, -2.935],   zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Santander",              country: "Spain",          stn: "10", ll: [43.4623,-3.8099],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Oviedo",                 country: "Spain",          stn: "11", ll: [43.3614,-5.8593],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Gijón",                  country: "Spain",          stn: "12", ll: [43.5453,-5.6615],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "A Coruña",               country: "Spain",          stn: "13", ll: [43.3623,-8.4115],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Santiago de Compostela", country: "Spain",          stn: "14", ll: [42.8782,-8.5448],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Ourense",                country: "Spain",          stn: "15", ll: [42.3364,-7.8641],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Vigo",                   country: "Spain",          stn: "16", ll: [42.2406,-8.7207],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Tui",                    country: "Spain",          stn: "17", ll: [42.0457,-8.6446],  zoom: 14, dur: null, photo: null, text: LOREM },
-  { city: "Valença",                country: "Portugal",       stn: "18", ll: [42.0284,-8.6327],  zoom: 14, dur: null, photo: null, text: LOREM },
-  { city: "Braga",                  country: "Portugal",       stn: "19", ll: [41.5454,-8.4265],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Porto",                  country: "Portugal",       stn: "20", ll: [41.1579,-8.6291],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Salamanca",              country: "Spain",          stn: "21", ll: [40.9701,-5.6635],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "Madrid",                 country: "Spain",          stn: "22", ll: [40.4168,-3.7038],  zoom: 12, dur: null, photo: null, text: LOREM },
-  { city: "Barcelona",              country: "Spain",          stn: "23", ll: [41.3851, 2.1734],  zoom: 13, dur: null, photo: null, text: LOREM },
-  { city: "The Wildfire",           country: "Spain / France", stn: "24", ll: [43.3,    3.0],     zoom: 10, dur: "Day trip",    photo: null, text: "After crossing the border into France, we were supposed to take the highway from Perpignan to Montpellier. Upon arriving there, we were told that the highway was closed due to a wildfire. Therefore, we had to take an alternative route, which turned out to be a 12-hour detour through the middle of nowhere." },
-  { city: "Lyon",                   country: "France",         stn: "25", ll: [45.748,  4.847],   zoom: 13, dur: "Day trip",    photo: null, text: "After 24 hours on the FlixBus, we finally reached Lyon. The drivers told us that the bus had to stop there and that we should go to the service centre to get another ticket for the ride to our final destination. As a result, I received another bus transfer from Lyon to Würzburg, for which I had to wait another six hours in Lyon. To make the best of the situation, I took a walk around the city and drank a fresh lemonade in a café." },
-  { city: "Würzburg",               country: "Germany",        stn: "26", ll: [49.795,  9.929],   zoom: 13, dur: "Return",      photo: null, text: "The journey ends where it began. Back in Würzburg after 75 nights on the road — with a new language, new perspectives, and a map full of memories across 23 cities and over 6,000 kilometers of public transport." },
+  { city: "Würzburg",              country: "Germany",        stn: "00", ll: [49.795,  9.929],   zoom: 11, dur: "Departure",   photo: null, text: "On April 23rd, I left my hometown, Würzburg, and jumped on a train heading straight to Paris." },
+  { city: "Paris",                  country: "France",         stn: "01", ll: [48.8566, 2.3522],  zoom: 11, dur: "Three nights", photo: null, text: "Arriving in Paris at night was an amazing choice. The street lights and the restaurants full of people created a lovely atmosphere.\n\nIn Paris, I was able to see famous sights such as the Basilique du Sacré-Cœur de Montmartre, Notre-Dame de Paris, Tour Eiffel, and the Louvre. But what fascinated me the most was the ambience of the city itself. Don't get me wrong, but simply sitting in a café in Paris already made me feel like a Frenchman. The soft sound of an accordion, the beautiful language, and the smell of delicious baked goods created a unique atmosphere. The only thing that stressed me a little was the hurried pace of the people and the large number of tourists.\n\nThat changed when I met some locals — a group of three friends who invited me to spend the evening with them in their friend's garden, eating pizza and philosophising about the meaning of life. Later on, I met the landlord and landlady, an elderly couple who had lived in Germany during their childhood, where they also got to know each other, before later moving back to France. It was lovely to hear my French neighbours speak so warmly about the time they had spent in my home country." },
+  { city: "Caen",                   country: "France",         stn: "02", ll: [49.1829,-0.3707],  zoom: 11, dur: "Two nights",  photo: null, text: "My new friends from Paris asked me, \"Why are you travelling to Caen? There's absolutely nothing there.\"\n\nWell, I gladly disagree with that. Yes, Caen is a small and quiet city, but I think that's exactly why I enjoyed my stay there so much. After spending three nights in the overstimulating metropolis of Paris, it felt like a retreat to experience the calmness of Caen. The marvellous old town, with the Château de Caen and the Église Saint-Pierre, made me not regret my trip to Caen at all." },
+  { city: "Le Mont-Saint-Michel",   country: "France",         stn: "03", ll: [48.6361,-1.5115],  zoom: 12, dur: "Day trip",    photo: null, text: "From Caen I took the bus to finally get to see one of my long-awaited destinations: Le Mont-Saint-Michel. After walking a bunch of kilometers along the coast I slowly saw the castle building up at the horizon. Reaching the island, I first took some photos and then entered the small town. Walking through this delicate town staying on a 92 meter tall rocky island was just indescribable. Feeling the tiny breeze of the ocean's wind blowing into my face mixed with the first rays of the summer sun made me feel just in peace." },
+  { city: "Rennes",                 country: "France",         stn: "04", ll: [48.1173,-1.6778],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Nantes",                 country: "France",         stn: "05", ll: [47.2184,-1.5536],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Bordeaux",               country: "France",         stn: "06", ll: [44.8378,-0.5792],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Biarritz",               country: "France",         stn: "07", ll: [43.4832,-1.5586],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Donostia-San Sebastián", country: "Spain",          stn: "08", ll: [43.3183,-1.9812],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Bilbao",                 country: "Spain",          stn: "09", ll: [43.263, -2.935],   zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Santander",              country: "Spain",          stn: "10", ll: [43.4623,-3.8099],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Oviedo",                 country: "Spain",          stn: "11", ll: [43.3614,-5.8593],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Gijón",                  country: "Spain",          stn: "12", ll: [43.5453,-5.6615],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "A Coruña",               country: "Spain",          stn: "13", ll: [43.3623,-8.4115],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Santiago de Compostela", country: "Spain",          stn: "14", ll: [42.8782,-8.5448],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Ourense",                country: "Spain",          stn: "15", ll: [42.3364,-7.8641],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Vigo",                   country: "Spain",          stn: "16", ll: [42.2406,-8.7207],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Tui",                    country: "Spain",          stn: "17", ll: [42.0457,-8.6446],  zoom: 12, dur: null, photo: null, text: LOREM },
+  { city: "Valença",                country: "Portugal",       stn: "18", ll: [42.0284,-8.6327],  zoom: 12, dur: null, photo: null, text: LOREM },
+  { city: "Braga",                  country: "Portugal",       stn: "19", ll: [41.5454,-8.4265],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Porto",                  country: "Portugal",       stn: "20", ll: [41.1579,-8.6291],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Salamanca",              country: "Spain",          stn: "21", ll: [40.9701,-5.6635],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "Madrid",                 country: "Spain",          stn: "22", ll: [40.4168,-3.7038],  zoom: 10, dur: null, photo: null, text: LOREM },
+  { city: "Barcelona",              country: "Spain",          stn: "23", ll: [41.3851, 2.1734],  zoom: 11, dur: null, photo: null, text: LOREM },
+  { city: "The Wildfire",           country: "Spain / France", stn: "24", ll: [43.3,    3.0],     zoom:  9, dur: "Day trip",    photo: null, text: "After crossing the border into France, we were supposed to take the highway from Perpignan to Montpellier. Upon arriving there, we were told that the highway was closed due to a wildfire. Therefore, we had to take an alternative route, which turned out to be a 12-hour detour through the middle of nowhere." },
+  { city: "Lyon",                   country: "France",         stn: "25", ll: [45.748,  4.847],   zoom: 11, dur: "Day trip",    photo: null, text: "After 24 hours on the FlixBus, we finally reached Lyon. The drivers told us that the bus had to stop there and that we should go to the service centre to get another ticket for the ride to our final destination. As a result, I received another bus transfer from Lyon to Würzburg, for which I had to wait another six hours in Lyon. To make the best of the situation, I took a walk around the city and drank a fresh lemonade in a café." },
+  { city: "Würzburg",               country: "Germany",        stn: "26", ll: [49.795,  9.929],   zoom: 11, dur: "Return",      photo: null, text: "The journey ends where it began. Back in Würzburg after 75 nights on the road — with a new language, new perspectives, and a map full of memories across 23 cities and over 6,000 kilometers of public transport." },
 ];
 
 /* ── STATE ────────────────────────────────────────────── */
@@ -44,7 +44,6 @@ function startJourney() {
   document.getElementById('landing').classList.remove('active');
   document.getElementById('storymap').classList.add('active');
   if (!map) initMap();
-  renderDots();
   renderCards();
   goTo(0, false);
 }
@@ -70,6 +69,7 @@ function initMap() {
   }).addTo(map);
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
+  L.control.scale({ position: 'bottomleft', imperial: false, maxWidth: 150 }).addTo(map);
 
   // Full route – faint dashed line shown from the start
   L.polyline(STOPS.map(s => s.ll), {
@@ -145,23 +145,6 @@ function updateMap(idx, animate) {
       color: '#00a0a0', weight: 2.5, opacity: 0.7, dashArray: '5,4',
     }).addTo(map);
   }
-}
-
-/* ── DOTS ─────────────────────────────────────────────── */
-function renderDots() {
-  const el = document.getElementById('dots');
-  el.innerHTML = '';
-  STOPS.forEach((_, i) => {
-    const b = document.createElement('button');
-    b.className = 'dot';
-    b.style.cssText = [
-      `width:${i === active ? '14px' : '5px'}`,
-      `background:${i === active ? '#00a0a0' : i < active ? 'rgba(0,120,120,.5)' : '#2a2a2a'}`,
-      `box-shadow:${i === active ? '0 0 6px #007878' : 'none'}`,
-    ].join(';');
-    b.onclick = () => goTo(i, true);
-    el.appendChild(b);
-  });
 }
 
 /* ── CARDS ────────────────────────────────────────────── */
@@ -261,9 +244,6 @@ function goTo(idx, animate = true) {
   document.getElementById('btnNext').disabled  = active === STOPS.length - 1;
   document.getElementById('btnStart').disabled = active === 0;
   document.getElementById('btnEnd').disabled   = active === STOPS.length - 1;
-
-  // Dots
-  renderDots();
 
   // Card highlight + programmatic scroll
   document.querySelectorAll('.card').forEach((c, i) =>
